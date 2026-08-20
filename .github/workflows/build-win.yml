@@ -35,7 +35,7 @@ jobs:
         run: yarn --immutable
       
       - name: Build Electron App
-        run: yarn workspace desktop-electron build
+        run: ./bin/package-electron --skip-translations
       
       - name: Upload Windows x64 Installer (.exe)
         uses: actions/upload-artifact@v4
@@ -44,7 +44,7 @@ jobs:
           path: packages/desktop-electron/dist/Actual-windows-x64.exe
           if-no-files-found: error
 
-      - name: Upload Windows x64 Portable (.appx)
+      - name: Upload Windows x64 Appx
         uses: actions/upload-artifact@v4
         with:
           name: Actual-Windows-x64-Appx
