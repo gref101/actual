@@ -1,43 +1,52 @@
 name: Build Windows Desktop
 
+defaults:
+  run:
+    shell: bash
+
+env:
+  CI: true
+
 on:
   workflow_dispatch:
 
 jobs:
   build-windows:
-    runs-on: windows-latest
+    runs-on: windows-2022
     
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
       
-      - name: Setup Node.js
+      - name: Install Python setuptools
+        run: pip.exe install setuptools
+      
+      - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '24'
           cache: 'yarn'
       
       - name: Install Yarn
         run: npm install -g yarn
       
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
+        run: yarn --immutable
       
-      - name: Build desktop client
-        run: yarn build:browser
+      - name: Build Electron App
+        run: yarn workspace desktop-electron build
       
-      - name: Build Electron app
-        run: yarn electron:build
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      
-      - name: Upload Windows installer
+      - name: Upload Windows x64 Installer (.exe)
         uses: actions/upload-artifact@v4
         with:
-          name: Actual-Windows-Installer
-          path: packages/desktop-electron/dist/*.exe
-      
-      - name: Upload Windows portable
+          name: Actual-Windows-x64-Installer
+          path: packages/desktop-electron/dist/Actual-windows-x64.exe
+          if-no-files-found: error
+
+      - name: Upload Windows x64 Portable (.appx)
         uses: actions/upload-artifact@v4
         with:
-          name: Actual-Windows-Portable
-          path: packages/desktop-electron/dist/*.zip
+          name: Actual-Windows-x64-Appx
+          path: packages/desktop-electron/dist/Actual-windows-x64.appx
+          if-no-files-found: error
