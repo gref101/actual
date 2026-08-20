@@ -17,6 +17,9 @@ import {
   shell,
   utilityProcess,
 } from 'electron';
+
+app.commandLine.appendSwitch('lang', 'ru');
+
 import type {
   Env,
   ForkOptions,
