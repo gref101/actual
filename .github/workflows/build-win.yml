@@ -34,8 +34,8 @@ jobs:
       - name: Install dependencies
         run: yarn --immutable
       
-      - name: Build Electron App
-        run: ./bin/package-electron --skip-translations
+      - name: Build Electron App (with translations)
+        run: ./bin/package-electron
       
       - name: Upload Windows x64 Installer (.exe)
         uses: actions/upload-artifact@v4
